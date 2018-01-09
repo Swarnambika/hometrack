@@ -13,14 +13,14 @@ const
 const server = http.createServer((req, res) => {
 
     const { method, url, body, headers } = req;
-    console.log(':==>', method, url, headers['content-type']);
+    console.log('REQ: ', method, url, headers['content-type']);
 
     if (method == 'POST' && url == '/filter'
         && headers['content-type'] == 'application/json') {
 
         let body = [];
         req.on('error', err => {
-            console.log('X==>', err);
+            console.log('ERR: ', err);
             respondOut(res, JSON.stringify(errorObject(ERR_REQ_READ)), HTTP_CODE_BAD_REQUEST);
         }).on('data', data => {
             body.push(data);
@@ -32,7 +32,7 @@ const server = http.createServer((req, res) => {
                 payloads = JSON.parse(body)["payload"];
             }
             catch (err) {
-                console.log('X==>', err);
+                console.log('ERR: ', err);
                 respondOut(res, JSON.stringify(errorObject(ERR_PARSE_FAIL)), HTTP_CODE_BAD_REQUEST);
                 return;
             }
