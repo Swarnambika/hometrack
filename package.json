@@ -1,0 +1,11 @@
+{
+  "name": "hometrack",
+  "version": "1.0.0",
+  "description": "Node endpoint to filter an array of payloads(in a JSON) and return a response for the given criteria.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "sjayabalan",
+  "license": "ISC"
+}
