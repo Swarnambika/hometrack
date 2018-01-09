@@ -2,7 +2,7 @@ const http = require('http');
 
 const
     ERR_PARSE_FAIL = 'Could not decode request: JSON parsing failed',
-    ERR_NO_HANDLER = 'Could not handle this request. USAGE: POST application/json to /filter end-point.',
+    ERR_NO_HANDLER = 'Could not handle this request. USAGE: POST application/json to / (root) end-point.',
     ERR_REQ_READ = 'Error reading JSON data.';
 
 const
@@ -15,7 +15,7 @@ const server = http.createServer((req, res) => {
     const { method, url, body, headers } = req;
     console.log('REQ: ', method, url, headers['content-type']);
 
-    if (method == 'POST' && url == '/filter'
+    if (method == 'POST' && url == '/'
         && headers['content-type'] == 'application/json') {
 
         let body = [];
@@ -44,7 +44,7 @@ const server = http.createServer((req, res) => {
                         .map(key => pl.address[key])
                         .join(' ');
 
-                    prev.push({ 'concataddress': concataddress, 'type': 'htv', 'completed': 'completed' });
+                    prev.push({ 'concataddress': concataddress, 'type': 'htv', 'workflow': 'completed' });
                     return prev;
                 }, []);
 
