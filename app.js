@@ -9,15 +9,18 @@ const
     HTTP_CODE_BAD_REQUEST = 400,
     HTTP_CODE_OK = 200;
 
-
+// register a request handler on the newly created server
 const server = http.createServer((req, res) => {
 
+    // ES6 way of reading properties from request object
     const { method, url, body, headers } = req;
     console.log('REQ: ', method, url, headers['content-type']);
 
+    // handle only requests post to the root with specific content-type
     if (method == 'POST' && url == '/'
         && headers['content-type'] == 'application/json') {
 
+        // read incoming JSON block by block
         let body = [];
         req.on('error', err => {
             console.log('ERR: ', err);
@@ -27,6 +30,7 @@ const server = http.createServer((req, res) => {
         }).on('end', () => {
             body = Buffer.concat(body).toString();
 
+            // check if JSON is parsed correctly
             let payloads = [];
             try {
                 payloads = JSON.parse(body)["payload"];
@@ -36,6 +40,9 @@ const server = http.createServer((req, res) => {
                 respondOut(res, JSON.stringify(errorObject(ERR_PARSE_FAIL)), HTTP_CODE_BAD_REQUEST);
                 return;
             }
+
+            // 1. filter payloads by given criteria
+            // 2. reduce them to an array of objects with only 3 properties
             const response = payloads
                 .filter(pl => pl.type == 'htv' && pl.workflow == 'completed')
                 .reduce((prev, pl) => {
@@ -57,6 +64,7 @@ const server = http.createServer((req, res) => {
 
 });
 
+// utility function - sending out the response to client with appropriate status code
 function respondOut(res, msg, statusCode) {
     res.statusCode = statusCode;
     res.write(msg);
@@ -68,6 +76,7 @@ function errorObject(err) {
 }
 
 
+// server listening on configured port for incoming requests
 const port = process.env.PORT || 3000;
 server.listen(port, () => {
     console.log(`Listening on port: ${port}`);
